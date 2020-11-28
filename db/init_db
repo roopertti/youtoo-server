@@ -1,0 +1,3 @@
+#!/bin/bash
+docker build -t youtoo-db-image .
+docker run -itd --name youtoo-db -p 5432:5432 youtoo-db-image

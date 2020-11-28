@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Room {
+  id         Int       @id @default(autoincrement())
+  ref        String    @unique
+  created    DateTime  @default(now())
+  lastActive DateTime?
+  Message    Message[]
+  User       User[]
+}
+
+model User {
+  id      Int       @id @default(autoincrement())
+  ref     String    @unique
+  name    String
+  roomId  Int
+  joined  DateTime  @default(now())
+  Room    Room      @relation(fields: [roomId], references: [id])
+  Message Message[]
+}
+
+model Message {
+  id      Int           @id @default(autoincrement())
+  userId  Int?
+  roomId  Int
+  type    message_type?
+  content String
+  sentAt  DateTime      @default(now())
+  Room    Room          @relation(fields: [roomId], references: [id])
+  User    User?         @relation(fields: [userId], references: [id])
+}
+
+enum message_type {
+  system_info @map("system:info")
+  system_success @map("system:success")
+  system_warn @map("system:warn")
+  user_message @map("user:message")
+}
