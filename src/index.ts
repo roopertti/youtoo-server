@@ -2,6 +2,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server, Socket } from "socket.io";
 import { PrismaClient } from "@prisma/client";
+import cors from "cors";
 
 import registerRouter from "./router";
 
@@ -11,6 +12,14 @@ import registerRouter from "./router";
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
+
+/**
+ * Middleware
+ */
+app.use(cors({
+    // Allow requests from frontend dev server
+    origin: "http://localhost:3000"
+}));
 
 /**
  * Port
